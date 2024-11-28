@@ -1,17 +1,15 @@
+import "dotenv/config";
 import { generateObject } from "ai";
 import dotenv from "dotenv";
 import { createOpenAI } from "@ai-sdk/openai";
 // import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
-import "dotenv/config";
 dotenv.config();
 const api_key = process.env.OPENAI_API_KEY;
 
 const openai = createOpenAI({
-  apiKey:
-    "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",
-  // custom settings, e.g.
-  compatibility: "strict", // strict mode, enable when using the OpenAI API
+  apiKey: api_key,
+  compatibility: "strict",
 });
 
 export async function GenerateCourseOutput(prompt: string) {
