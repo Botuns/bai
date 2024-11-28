@@ -18,24 +18,21 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { countries } from "@/lib/countries";
+import {
+  QueryParams,
+  refineUserQuery,
+} from "@/app/services/prompt-refine.service";
 
-type BudgetType = "very cheap" | "economical" | "normal" | "luxury";
+type BudgetType = "very_cheap" | "economical" | "normal" | "luxury";
 
 const budgetOptions: { value: BudgetType; label: string }[] = [
-  { value: "very cheap", label: "Very Cheap" },
+  { value: "very_cheap", label: "Very Cheap" },
   { value: "economical", label: "Economical" },
   { value: "normal", label: "Normal" },
   { value: "luxury", label: "Luxury" },
 ];
 
-const conditionOptions = [
-  "New",
-  "Like New",
-  "Excellent",
-  "Good",
-  "Fair",
-  "Poor",
-];
+const conditionOptions = ["New", "Used", "Any"];
 
 export function HeroSection() {
   const [searchInput, setSearchInput] = useState("");
@@ -67,7 +64,15 @@ export function HeroSection() {
     }
   };
   async function handleSearch() {
-    console.log("Search for:", searchInput);
+    const queryParams: QueryParams = {
+      originalQuery: searchInput,
+      budget,
+      location,
+      brandCondition: condition,
+      additionalContext: {},
+    };
+    const response = await refineUserQuery(queryParams);
+    console.log("Refined query:", response);
   }
 
   return (
@@ -167,7 +172,7 @@ export function HeroSection() {
               </SelectTrigger>
               <SelectContent>
                 {conditionOptions.map((option) => (
-                  <SelectItem key={option} value={option}>
+                  <SelectItem key={option} value={option.toLowerCase()}>
                     {option}
                   </SelectItem>
                 ))}

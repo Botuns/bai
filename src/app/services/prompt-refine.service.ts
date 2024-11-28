@@ -3,7 +3,7 @@ import { generateObject } from "ai";
 import z from "zod";
 type BudgetType = "very_cheap" | "economical" | "normal" | "luxury";
 
-type queryParams = {
+export type QueryParams = {
   originalQuery: string;
   budget: BudgetType;
   location: string;
@@ -25,7 +25,7 @@ const conditionModifier = (brandCondition: string) =>
     new: "brand new, latest model, unused",
     any: "",
   }[brandCondition]);
-export async function refineUserQuery(params: queryParams) {
+export async function refineUserQuery(params: QueryParams) {
   const systemPrompt = `You are an expert search query optimizer especially for the tavily api. Refine the following search query to:
     1. Maximize search result relevance
     2. Include synonyms and related terms
