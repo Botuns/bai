@@ -10,6 +10,7 @@ const api_key = process.env.OPENAI_API_KEY;
 const openai = createOpenAI({
   apiKey: api_key,
   compatibility: "strict",
+  
 });
 
 export async function GenerateCourseOutput(prompt: string) {
