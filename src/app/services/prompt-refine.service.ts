@@ -1,4 +1,4 @@
-import { openai } from "@ai-sdk/openai";
+import { MODEL_NAME, openai } from "@/openai.config";
 import { generateObject } from "ai";
 import z from "zod";
 type BudgetType = "very_cheap" | "economical" | "normal" | "luxury";
@@ -39,7 +39,7 @@ export async function refineUserQuery(params: QueryParams) {
     
     Output ONLY the refined, optimized search query with the provided schema.`;
   const search_response = await generateObject({
-    model: openai("gpt-4o-mini"),
+    model: openai(MODEL_NAME),
     schema: refined_query_schema,
     // system: params.originalQuery,
     // prompt: systemPrompt,

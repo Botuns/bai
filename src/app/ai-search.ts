@@ -1,22 +1,11 @@
-import "dotenv/config";
 import { generateObject } from "ai";
-import dotenv from "dotenv";
-import { createOpenAI } from "@ai-sdk/openai";
-// import { openai } from "@ai-sdk/openai";
-import { z } from "zod";
-dotenv.config();
-const api_key = process.env.OPENAI_API_KEY;
 
-const openai = createOpenAI({
-  apiKey: api_key,
-  compatibility: "strict",
-  
-});
+import { MODEL_NAME, openai } from "../openai.config";
+import { z } from "zod";
 
 export async function GenerateCourseOutput(prompt: string) {
-  console.log(api_key);
   const response = await generateObject({
-    model: openai("gpt-4o-mini"),
+    model: openai(MODEL_NAME),
     schema: resultshema,
     prompt: prompt,
   });

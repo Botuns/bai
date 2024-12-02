@@ -22,6 +22,8 @@ import {
   QueryParams,
   refineUserQuery,
 } from "@/app/services/prompt-refine.service";
+import { toast } from "sonner";
+import { searchDeals } from "@/app/services/get-deals";
 
 type BudgetType = "very_cheap" | "economical" | "normal" | "luxury";
 
@@ -39,6 +41,7 @@ export function HeroSection() {
   const [budget, setBudget] = useState<BudgetType>("normal");
   const [location, setLocation] = useState("global");
   const [condition, setCondition] = useState("New");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // useEffect(() => {
   //   fetch("https://restcountries.com/v3.1/all")
@@ -64,6 +67,7 @@ export function HeroSection() {
     }
   };
   async function handleSearch() {
+    setIsLoading(true);
     const queryParams: QueryParams = {
       originalQuery: searchInput,
       budget,
@@ -71,8 +75,18 @@ export function HeroSection() {
       brandCondition: condition,
       additionalContext: {},
     };
-    const response = await refineUserQuery(queryParams);
-    console.log("Refined query:", response);
+    try {
+      const response = await refineUserQuery(queryParams);
+      if (response.refined_query) {
+        const deals = await searchDeals(response.refined_query);
+        console.log("Deals:", deals);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+      console.error("Error refining query:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -118,7 +132,14 @@ export function HeroSection() {
                 <Mic className="h-5 w-5" />
               </Button>
               <Button onClick={handleSearch} className="rounded-lg">
-                Search
+                {isLoading ? (
+                  <>
+                    <span className="animate-spin h-4 w-4 mr-2">🔄</span>
+                    Searching...
+                  </>
+                ) : (
+                  "Search"
+                )}
               </Button>
             </div>
           </div>
