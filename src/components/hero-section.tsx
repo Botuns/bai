@@ -113,7 +113,7 @@ export function HeroSection() {
           ))}
         </div>
 
-        {/* Enhanced search section */}
+        {/*  search section */}
         <div className="space-y-4 max-w-3xl mx-auto">
           <div className="relative w-full">
             <Input

@@ -53,7 +53,6 @@ export async function refineUserQuery(params: QueryParams) {
   return refinedQuery;
 }
 
-// the expected response type on refining user query
 
 const refined_query_schema = z.object({
   refined_query: z.string(),
