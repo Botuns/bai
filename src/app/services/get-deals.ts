@@ -1,21 +1,6 @@
 import { tvly } from "../search";
 
-const TAVILY_BASE_URL = "https://api.tavily.com";
 export async function searchDeals(query: string) {
-  // Example using Tavily API
-  //   const response = await fetch(`${TAVILY_BASE_URL}/search`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${process.env.TAVILY_API_KEY}`,
-  //     },
-  //     body: JSON.stringify({
-  //       query: query,
-  //       max_results: 10,
-  //       include_domains: [],
-  //       include_answer: true,
-  //     }),
-  //   });
   const response = await tvly.search(query, {
     includeAnswer: true,
     includeImages: true,
@@ -23,6 +8,9 @@ export async function searchDeals(query: string) {
     includeDomains: [],
   });
   //   const searchResults = await response.json();
+  // save images to local storage
+  localStorage.setItem("images", JSON.stringify(response.images));
+  console.log(response);
   return processSearchResults(response);
 }
 

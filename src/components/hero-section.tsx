@@ -24,6 +24,9 @@ import {
 } from "@/app/services/prompt-refine.service";
 import { toast } from "sonner";
 import { searchDeals } from "@/app/services/get-deals";
+import { extractStructuredResults } from "@/app/services/products/extract-products";
+import { ProductSearchResult } from "@/lib/types/products-type";
+import { useRouter } from "next/navigation";
 
 type BudgetType = "very_cheap" | "economical" | "normal" | "luxury";
 
@@ -37,22 +40,12 @@ const budgetOptions: { value: BudgetType; label: string }[] = [
 const conditionOptions = ["New", "Used", "Any"];
 
 export function HeroSection() {
+  const router = useRouter();
   const [searchInput, setSearchInput] = useState("");
   const [budget, setBudget] = useState<BudgetType>("normal");
   const [location, setLocation] = useState("global");
   const [condition, setCondition] = useState("New");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  // useEffect(() => {
-  //   fetch("https://restcountries.com/v3.1/all")
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       const countryNames = data
-  //         .map((country: { name: { common: string } }) => country.name.common)
-  //         .sort();
-  //       setCountries(["global", ...countryNames]);
-  //     });
-  // }, []);
 
   const features = [
     { icon: Tag, label: "Location Precision" },
@@ -80,6 +73,20 @@ export function HeroSection() {
       if (response.refined_query) {
         const deals = await searchDeals(response.refined_query);
         console.log("Deals:", deals);
+        if (deals.length > 0) {
+          toast.success("Search completed successfully,analzing results");
+          const analyzed: ProductSearchResult = await extractStructuredResults(
+            deals,
+            response.refined_query
+          );
+          console.log("Analyzed:", analyzed);
+          if (analyzed.products.length > 0) {
+            // Save search results to local storage
+            localStorage.setItem("searchResults", JSON.stringify(analyzed));
+            toast.success("Search results analysed successfully");
+            router.push("/results");
+          }
+        }
       }
     } catch (error: any) {
       toast.error(error.message);
