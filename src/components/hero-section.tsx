@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -26,7 +27,6 @@ import { toast } from "sonner";
 import { searchDeals } from "@/app/services/get-deals";
 import { extractStructuredResults } from "@/app/services/products/extract-products";
 import { ProductSearchResult } from "@/lib/types/products-type";
-import { useRouter } from "next/navigation";
 
 type BudgetType = "very_cheap" | "economical" | "normal" | "luxury";
 
@@ -40,6 +40,7 @@ const budgetOptions: { value: BudgetType; label: string }[] = [
 const conditionOptions = ["New", "Used", "Any"];
 
 export function HeroSection() {
+  const router = useRouter();
   const router = useRouter();
   const [searchInput, setSearchInput] = useState("");
   const [budget, setBudget] = useState<BudgetType>("normal");
